@@ -1,0 +1,52 @@
+# ============================
+#  Normalize line endings
+# ============================
+
+# Use LF for everything to ensure consistency across OSes
+* text eol=lf
+
+# ============================
+#  Special file types
+# ============================
+
+# Binary files (do not modify line endings)
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.pdf binary
+*.zip binary
+*.gz binary
+*.tar binary
+
+# ============================
+#  Language-specific overrides
+# ============================
+
+# Windows batch files use CRLF
+*.bat text eol=crlf
+*.cmd text eol=crlf
+
+# Shell scripts (used in Docker/init) use LF
+*.sh text eol=lf
+
+# Python, SQL, YAML, Dockerfiles, JSON, JS, JSX, etc → LF
+*.py text eol=lf
+*.sql text eol=lf
+*.yml text eol=lf
+*.yaml text eol=lf
+Dockerfile text eol=lf
+*.json text eol=lf
+*.js text eol=lf
+*.jsx text eol=lf
+*.ts text eol=lf
+*.tsx text eol=lf
+
+# ============================
+#  Git configuration helpers
+# ============================
+
+# Keep .gitattributes and .gitignore in LF
+.gitattributes text eol=lf
+.gitignore text eol=lf

@@ -1,0 +1,8 @@
+# Minimal Great Expectations config (edit for your environment)
+config_version: 3.0
+datasources: { }
+stores: { }
+expectations_store_name: expectations_store
+validations_store_name: validations_store
+checkpoint_store_name: checkpoint_store
+data_docs_sites: { }
