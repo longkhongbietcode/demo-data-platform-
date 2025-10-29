@@ -1,52 +1,100 @@
-# Bookshop Data Platform (Scaffold)
+# 📚 Bookshop Data Platform
 
-This repository is a **minimal, vendor-agnostic scaffold** generated from `config/datasources.json`.  
-It includes:
-- **Airflow DAG** for batch ingestion and transform steps
-- **dbt** project skeleton for ELT modeling
-- **Great Expectations** stub for quality checks
-- Simple **config parser** mapping your sources by `namespace_name` and `oddrn`
-- Optional **Docker Compose** to bring up a local Postgres + MinIO (S3) sandbox
-
-> Replace placeholders with your real connection strings, credentials, and models.
-
-## Quick Start
-
-1. Create a Python virtual environment and install requirements:
-   ```bash
-   python -m venv .venv && source .venv/bin/activate
-   pip install -r requirements.txt
-   ```
-
-2. Export environment variables (see `.env.example`) for connectors (Postgres, Snowflake, S3, Kafka, etc.).
-
-3. (Optional) Start local sandbox services:
-   ```bash
-   docker compose -f infrastructure/docker-compose.yml up -d
-   ```
-
-4. Run the **config lister** to see detected assets:
-   ```bash
-   python tools/list_config.py
-   ```
-
-5. For Airflow (local dev), set envs and place `orchestrations/airflow/dags` in your `$AIRFLOW_HOME/dags` (or mount via Compose).
-
-6. For dbt, edit `transformations/dbt_project/dbt_project.yml` + `profiles.yml` and add models in `models/`.
-
-7. For Great Expectations, define expectations in `quality/great_expectations/expectations/` and run checkpoints.
+Dự án **Bookshop Data Platform** là một nền tảng dữ liệu mẫu được xây dựng để minh họa kiến trúc hiện đại gồm:
+- **Backend API** (Python / FastAPI)
+- **Frontend UI** (Vite + React)
+- **Hạ tầng** điều phối bằng **Docker Compose**
+- Các module mở rộng: ETL, dbt, Airflow, và Great Expectations (cho data quality)
 
 ---
 
-## Sources detected from `datasources.json`
-We grouped sources by `namespace_name` and parsed `oddrn` to infer the tech family (postgresql, redshift, snowflake, airflow, kafka, s3, kinesis, etc.).
+## 🚀 Cách chạy nhanh với Docker
 
-- Namespaces present: ['Data Lake', 'Data Quality', 'ETL', 'Messaging', 'Samples', 'Transactional']
+### 1. Chuẩn bị môi trường
+Cài Docker và Docker Compose:
+```bash
+sudo apt install docker docker-compose -y
+```
+
+### 2. Tạo file cấu hình môi trường
+Sao chép file mẫu:
+```bash
+cp bookshop-data-platform/.env.example bookshop-data-platform/.env
+```
+Cập nhật các giá trị cần thiết (nếu có database, MinIO, v.v.).
+
+### 3. Chạy toàn bộ hệ thống
+Từ thư mục gốc:
+```bash
+cd bookshop-data-platform/infrastructure
+docker compose up -d --build
+```
+
+### 4. Kiểm tra dịch vụ
+| Thành phần | Cổng | Mô tả |
+|-------------|------|-------|
+| Frontend | http://localhost:5173 | Giao diện người dùng |
+| Backend | http://localhost:8000 | API chính |
+| Postgres / MinIO | Theo cấu hình `.env` | Dịch vụ dữ liệu |
 
 ---
 
-### Notes
-- This scaffold is intentionally lightweight to be portable. Replace stubs with your vendor SDKs (e.g., `psycopg2`, `snowflake-connector-python`, `boto3`, `confluent-kafka`, etc.).
-- The Airflow DAG demonstrates **orchestration patterns**: upstream dependencies, SLAs, retries, and quality gates.
-- The dbt skeleton shows where to put **staging (stg_)** and **marts** models.
-- Great Expectations folders are prepared; wire them up to your data lake/warehouse.
+## 🧑‍💻 Cách chạy thủ công (Developer mode)
+
+### Backend
+```bash
+cd bookshop-data-platform/backend
+python -m venv .venv
+source .venv/bin/activate  # hoặc .venv\Scripts\activate trên Windows
+pip install -r requirements.txt
+uvicorn main:app --reload --host 0.0.0.0 --port 8000
+```
+
+### Frontend
+```bash
+cd bookshop-data-platform/frontend
+npm install
+npm run dev
+```
+Sau đó mở [http://localhost:5173](http://localhost:5173).
+
+---
+
+## 🧱 Cấu trúc thư mục
+
+```
+bookshop-data-platform/
+├── backend/              # FastAPI backend
+│   ├── Dockerfile
+│   └── main.py
+├── frontend/             # React + Vite frontend
+│   ├── Dockerfile
+│   └── package.json
+├── config/               # Cấu hình dữ liệu, datasource
+├── infrastructure/       # Docker Compose, setup môi trường
+│   └── docker-compose.yml
+├── transformations/      # dbt models, ETL pipeline
+├── quality/              # Great Expectations
+├── orchestrations/       # Airflow DAGs
+└── tools/                # Tiện ích Python (như list_config.py)
+```
+
+---
+
+## 🧩 Ghi chú
+
+- Khi thay đổi source code, bạn có thể rebuild Docker containers:
+  ```bash
+  docker compose build
+  docker compose up -d
+  ```
+- Kiểm tra logs:
+  ```bash
+  docker compose logs -f
+  ```
+
+---
+
+## 🧠 Tác giả & Ghi chú
+
+Dự án được khởi tạo nhằm mục đích học tập và trình diễn **data platform architecture** bao gồm ingest, transform, và quality layers.
